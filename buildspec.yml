@@ -1,0 +1,39 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+    commands:
+      - echo Installing dependencies...
+      - pip install -r requirements.txt
+
+  pre_build:
+    commands:
+      - echo Starting pre-build phase...
+      - python --version
+
+  build:
+    commands:
+      - echo Running unit tests...
+      - mkdir -p reports
+      - pytest -v --junitxml=reports/junit.xml
+
+  post_build:
+    commands:
+      - echo Build and tests completed.
+
+reports:
+  pytest_reports:
+    files:
+      - junit.xml
+    base-directory: reports
+    file-format: JUNITXML
+
+artifacts:
+  files:
+    - app.py
+    - test_app.py
+    - requirements.txt
+    - buildspec.yml
+    - reports/junit.xml
